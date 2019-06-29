@@ -18,7 +18,7 @@ services:
       - database
     environment:
       url: https://kristo.xyz/
-      server__port: 80
+      server__port: 8080
       database__client: mysql
       database__connection__host: db
       database__connection__user: root
@@ -30,7 +30,7 @@ services:
       - traefik.frontend.headers.SSLRedirect=true
       - traefik.frontend.redirect.regex=^https?://[a-z0-9.]+/(.*)
       - traefik.frontend.redirect.replacement=https://www.kristo.xyz/$${1}
-      - traefik.port=80
+      - traefik.port=8080
       - traefik.docker.network=gateway
 
   db:
