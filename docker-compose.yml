@@ -1,0 +1,35 @@
+version: "3.1"
+
+networks:
+    default:
+        external:
+            name: gateway
+
+services:
+
+  ghost: 
+    image: ghost
+    restart: always
+    networks:
+      - default
+    environment:
+      url: https://kristo.xyz/
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: root
+      database__connection__password: ${MYSQL_ROOT_PASSWORD}
+      database__connection__database: blog
+    labels:
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:www.kristo.xyz,kristo.xyz
+      - traefik.frontend.headers.SSLRedirect=true
+      - traefik.frontend.redirect.regex=^https?://[a-z0-9.]+/(.*)
+      - traefik.frontend.redirect.replacement=https://www.kristo.xyz/$${1}
+      - traefik.port=80
+      - traefik.docker.network=gateway
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
