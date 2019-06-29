@@ -1,9 +1,12 @@
 version: "3.1"
 
 networks:
-    default:
-        external:
-            name: gateway
+  default:
+    external:
+      name: gateway
+  database:
+    driver: bridge
+    internal: true
 
 services:
 
@@ -12,8 +15,10 @@ services:
     restart: always
     networks:
       - default
+      - database
     environment:
       url: https://kristo.xyz/
+      server__port: 80
       database__client: mysql
       database__connection__host: db
       database__connection__user: root
@@ -31,5 +36,7 @@ services:
   db:
     image: mariadb
     restart: always
+    networks:
+      - database
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
